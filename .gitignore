@@ -5,3 +5,4 @@ instance/*.db
 *.pyc
 test-report.json
 reports/*.xml
+actions-runner/

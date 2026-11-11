@@ -17,19 +17,14 @@ jobs:
       - name: Check Python
         shell: powershell
         run: |
-          $python = "C:\Users\JPC\Assignment-Submission-Portal\actions-runner\_work\_tool\Python\3.12.10\x64\python.exe"
-          if (-not (Test-Path $python)) {
-            Write-Error "Python executable not found: $python"
-            exit 1
-          }
+          $python = "C:\Users\JPC\Assignment-Submission-Portal\.venv\Scripts\python.exe"
           & $python --version
           & $python -c "import sys; print(sys.executable)"
 
       - name: Install Dependencies
         shell: powershell
         run: |
-          $python = "C:\Users\JPC\Assignment-Submission-Portal\actions-runner\_work\_tool\Python\3.12.10\x64\python.exe"
-          & $python -m pip install --upgrade pip
+          $python = "C:\Users\JPC\Assignment-Submission-Portal\.venv\Scripts\python.exe"
           & $python -m pip install -r requirements.txt
 
       - name: Create Reports Folder
@@ -42,14 +37,14 @@ jobs:
         continue-on-error: true
         shell: powershell
         run: |
-          $python = "C:\Users\JPC\Assignment-Submission-Portal\actions-runner\_work\_tool\Python\3.12.10\x64\python.exe"
+          $python = "C:\Users\JPC\Assignment-Submission-Portal\.venv\Scripts\python.exe"
           & $python -m pytest -v --junitxml=reports/junit.xml
 
       - name: Generate JSON Report
         if: always()
         shell: powershell
         run: |
-          $python = "C:\Users\JPC\Assignment-Submission-Portal\actions-runner\_work\_tool\Python\3.12.10\x64\python.exe"
+          $python = "C:\Users\JPC\Assignment-Submission-Portal\.venv\Scripts\python.exe"
           & $python generate_report.py
 
       - name: Send Report to Local Computer

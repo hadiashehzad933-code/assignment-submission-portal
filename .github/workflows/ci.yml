@@ -14,17 +14,23 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Use Project Python
+      - name: Check Python
         shell: powershell
         run: |
-          python --version
-          python -c "import sys; print(sys.executable)"
+          $python = "C:\Users\JPC\Assignment-Submission-Portal\actions-runner\_work\_tool\Python\3.12.10\x64\python.exe"
+          if (-not (Test-Path $python)) {
+            Write-Error "Python executable not found: $python"
+            exit 1
+          }
+          & $python --version
+          & $python -c "import sys; print(sys.executable)"
 
       - name: Install Dependencies
         shell: powershell
         run: |
-          python -m pip install --upgrade pip
-          python -m pip install -r requirements.txt
+          $python = "C:\Users\JPC\Assignment-Submission-Portal\actions-runner\_work\_tool\Python\3.12.10\x64\python.exe"
+          & $python -m pip install --upgrade pip
+          & $python -m pip install -r requirements.txt
 
       - name: Create Reports Folder
         shell: powershell
@@ -36,13 +42,15 @@ jobs:
         continue-on-error: true
         shell: powershell
         run: |
-          python -m pytest -v --junitxml=reports/junit.xml
+          $python = "C:\Users\JPC\Assignment-Submission-Portal\actions-runner\_work\_tool\Python\3.12.10\x64\python.exe"
+          & $python -m pytest -v --junitxml=reports/junit.xml
 
       - name: Generate JSON Report
         if: always()
         shell: powershell
         run: |
-          python generate_report.py
+          $python = "C:\Users\JPC\Assignment-Submission-Portal\actions-runner\_work\_tool\Python\3.12.10\x64\python.exe"
+          & $python generate_report.py
 
       - name: Send Report to Local Computer
         if: always()

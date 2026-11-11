@@ -8,7 +8,8 @@ on:
 jobs:
   test:
     name: Run Assignment Portal Tests
-    runs-on: ubuntu-latest
+
+    runs-on: [self-hosted, Windows, X64]
 
     steps:
       - name: Checkout Repository
@@ -20,9 +21,41 @@ jobs:
           python-version: "3.12"
 
       - name: Install Dependencies
+        shell: powershell
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
+      - name: Create Reports Folder
+        shell: powershell
+        run: |
+          New-Item -ItemType Directory -Force reports
+
       - name: Run Pytest
-        run: python -m pytest -v
+        id: tests
+        continue-on-error: true
+        shell: powershell
+        run: |
+          python -m pytest -v --junitxml=reports/junit.xml
+
+      - name: Generate JSON Report
+        if: always()
+        shell: powershell
+        run: |
+          python generate_report.py
+
+      - name: Send Report to Local Computer
+        if: always()
+        shell: powershell
+        run: |
+          Invoke-RestMethod `
+            -Uri "http://127.0.0.1:5001/report" `
+            -Method Post `
+            -ContentType "application/json" `
+            -InFile "test-report.json"
+
+      - name: Mark Pipeline Failed if Tests Failed
+        if: steps.tests.outcome == 'failure'
+        shell: powershell
+        run: |
+          Write-Error "One or more tests failed."

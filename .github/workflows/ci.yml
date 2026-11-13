@@ -62,6 +62,30 @@ jobs:
             -ContentType "application/json" `
             -InFile "test-report.json"
 
+      - name: Send Email Report
+        if: always()
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          secure: true
+          username: ${{ secrets.MAIL_USERNAME }}
+          password: ${{ secrets.MAIL_PASSWORD }}
+          to: ${{ secrets.REPORT_EMAIL_TO }}
+          from: ${{ secrets.MAIL_USERNAME }}
+          subject: "Assignment Portal CI - ${{ steps.tests.outcome }}"
+          body: |
+            Assignment Portal CI Report
+
+            Repository: ${{ github.repository }}
+            Branch: ${{ github.ref_name }}
+            Commit: ${{ github.sha }}
+            Run ID: ${{ github.run_id }}
+            Test Result: ${{ steps.tests.outcome }}
+
+            Detailed test report is attached.
+          attachments: test-report.json
+
       - name: Mark Pipeline Failed if Tests Failed
         if: steps.tests.outcome == 'failure'
         shell: powershell

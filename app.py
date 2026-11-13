@@ -77,7 +77,7 @@ def create_app(test_config=None):
             ).strip()
 
             # Check required fields
-            if not all([name, registration, title, url]):
+            if not all([name, title, url]):
                 error = "All fields are required."
 
             # Check URL

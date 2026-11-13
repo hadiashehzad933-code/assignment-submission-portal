@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Assignment Submission Portal</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background: #f2f4f8;
+        margin: 40px;
+      }
+      .container {
+        max-width: 850px;
+        margin: auto;
+        background: white;
+        padding: 30px;
+        border-radius: 12px;
+      }
+      h1,
+      h2 {
+        color: #243b64;
+      }
+      input {
+        width: 100%;
+        padding: 12px;
+        margin: 8px 0 16px;
+        box-sizing: border-box;
+      }
+      button {
+        background: #2457a6;
+        color: white;
+        padding: 12px 25px;
+        border: none;
+        cursor: pointer;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+      }
+      th,
+      td {
+        border: 1px solid #ddd;
+        padding: 10px;
+        text-align: left;
+        overflow-wrap: anywhere;
+      }
+      th {
+        background: #e8edf5;
+      }
+      .message {
+        margin-top: 12px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Assignment Submission Portal</h1>
+      <h2>Submit Your Assignment</h2>
+
+      <form id="submissionForm">
+        <label>Student Name</label>
+        <input name="name" required />
+
+        <label>Registration Number</label>
+        <input name="registration" required />
+
+        <label>Assignment Title</label>
+        <input name="title" required />
+
+        <label>Submission URL</label>
+        <input
+          name="url"
+          type="url"
+          placeholder="https://example.com"
+          required
+        />
+
+        <button type="submit">Submit Assignment</button>
+      </form>
+
+      <p id="message" class="message" aria-live="polite"></p>
+
+      <h2>Saved Demo Submissions</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Registration No.</th>
+            <th>Assignment</th>
+            <th>Submission</th>
+          </tr>
+        </thead>
+        <tbody id="submissionList"></tbody>
+      </table>
+    </div>
+
+    <script>
+      const form = document.getElementById("submissionForm");
+      const list = document.getElementById("submissionList");
+      const message = document.getElementById("message");
+
+      let submissions = [];
+
+      function displaySubmissions() {
+        list.replaceChildren();
+
+        submissions.forEach((item) => {
+          const row = document.createElement("tr");
+
+          [item.name, item.registration, item.title].forEach((value) => {
+            const cell = document.createElement("td");
+            cell.textContent = value;
+            row.appendChild(cell);
+          });
+
+          const linkCell = document.createElement("td");
+          const link = document.createElement("a");
+          link.href = item.url;
+          link.textContent = "Open Submission";
+          link.target = "_blank";
+          link.rel = "noopener noreferrer";
+          linkCell.appendChild(link);
+          row.appendChild(linkCell);
+
+          list.appendChild(row);
+        });
+      }
+
+      form.addEventListener("submit", (event) => {
+        event.preventDefault();
+
+        const data = new FormData(form);
+        const url = data.get("url").trim();
+
+        try {
+          const parsed = new URL(url);
+          if (!["http:", "https:"].includes(parsed.protocol)) {
+            throw new Error("Invalid URL");
+          }
+        } catch {
+          message.textContent = "Please enter a valid URL.";
+          return;
+        }
+
+        submissions.push({
+          name: data.get("name").trim(),
+          registration: data.get("registration").trim(),
+          title: data.get("title").trim(),
+          url: url,
+        });
+
+        displaySubmissions();
+        message.textContent = "Demo submission added successfully!";
+        form.reset();
+      });
+    </script>
+  </body>
+</html>

@@ -1,5 +1,10 @@
 name: Assignment Portal CI
 
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
 on:
   push:
   pull_request:
@@ -62,3 +67,21 @@ jobs:
         shell: powershell
         run: |
           Write-Error "One or more tests failed."
+
+  deploy:
+    name: Deploy to GitHub Pages
+    needs: test
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Upload Pages Artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./docs
+
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v4

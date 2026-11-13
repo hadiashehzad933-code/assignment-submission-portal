@@ -1,0 +1,32 @@
+{
+    "repository": "hadiashehzad933-code/assignment-submission-portal",
+    "branch": "main",
+    "commit_sha": "7727d853955ed332b52e71e1d35a516b10b85f07",
+    "pipeline_run_id": "43413627140",
+    "timestamp": "2026-11-13T11:03:32.118538+00:00",
+    "tests": [
+        {
+            "name": "test_valid_submission_is_saved_and_displayed",
+            "classname": "tests.test_app",
+            "result": "PASSED",
+            "failure_message": ""
+        },
+        {
+            "name": "test_missing_registration_number_is_rejected",
+            "classname": "tests.test_app",
+            "result": "PASSED",
+            "failure_message": ""
+        },
+        {
+            "name": "test_invalid_submission_url_is_rejected",
+            "classname": "tests.test_app",
+            "result": "PASSED",
+            "failure_message": ""
+        }
+    ],
+    "total_tests": 3,
+    "passed_tests": 3,
+    "failed_tests": 0,
+    "skipped_tests": 0,
+    "overall_status": "PASSED"
+}

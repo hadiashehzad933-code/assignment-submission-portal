@@ -38,7 +38,7 @@ jobs:
         shell: powershell
         run: |
           $python = "C:\Users\JPC\Assignment-Submission-Portal\.venv\Scripts\python.exe"
-          & $python -m pytest -v --junitxml=reports/junit.xml
+          & $python -m pytest -v --import-mode=importlib tests --junitxml=reports/junit.xml
 
       - name: Generate JSON Report
         if: always()
